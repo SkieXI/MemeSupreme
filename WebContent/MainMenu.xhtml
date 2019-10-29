@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"> 
+<h:head>
+	<title><ui:insert name="title">Main Menu</ui:insert></title>
+
+	<script type="text/javascript"
+		src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript"
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<h:outputScript library="js" name="Chart.js" />
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+		crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+		integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script
+		src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+	<script type="text/javascript">
+	//All of this was from Mark Moot as we were panicking at the last minute and we were hitting our heads for at least 3 hours.
+	function getWeatherData() {
+		$.ajax(
+				{
+				   type: "GET",
+				   url: "/MemeSupreme/rest/tweets/getalldata",
+				   dataType: "json",
+				   success: function(data)
+				{
+
+				//Display
+				$('#twitterItems2').dataTable({
+					"responsive" : true,
+					"data" : data,
+					"columns" : [ {
+						"data" : "screenName",
+						"reposonsivePriority" : 1
+					}, {
+						"data" : "tweet",
+						"responsivePriority" : 2
+					}, {
+						"data" : "retweetCount",
+						"reposonsivePriority" : 3
+					}, {
+						"data" : "likes",
+						"responsivePriority" : 4
+					}, {
+						"data" : "language",
+					"reposonsivePriority" : 5
+					} ]
+				
+				});
+			},
+
+			error : function(xhr, ajaxOptions, throwError) {
+				alert(xhr.status);
+				alert(throwError);
+			},
+		})
+	}
+
+	$(document).ready(getWeatherData);
+</script>
+<h:outputStylesheet library="css" name="Main.css" />
+</h:head>
+<body> 
+	<div align="center">
+	<h1>SEARCH</h1>
+		<h:form>
+			Search: <h:inputText id = "search" value= "#{search.search}" title ="" />
+			Number to search: <h:inputText id = "count" value= "#{search.count}" title ="" />
+			<br/>
+			<h:commandButton value="Search" action="#{userController.Search(search)}" />
+			<h:commandButton value="Test" action="#{userController.Test()}" /><br/>
+		</h:form>
+		<h:form>
+			<h:button value="Logout" outcome="Index.xhtml" />
+		</h:form>
+		</div>
+		
+		<div class="hero-image">
+		<div class="hero-text">
+		
+			<table id="twitterItems2" width="75%">
+				<thead>
+					<tr>
+						<th><label>ScreenName</label></th>
+						<th><label>Text</label></th>
+						<th><label>Recounts</label></th>
+						<th><label>Favorites</label></th>
+						<th><label>Language</label></th>
+					</tr>
+				</thead>
+				<tbody>
+
+				</tbody>
+			</table>
+			<!-- Loads the Javascript file that creates a line chart for temperatureC. -->
+			<label>Retweet Chart</label>
+			<div id="chartRetweets_div"></div>
+			<!-- Loads the Javascript file that creates a line chart for temperatureF. -->
+			<label>Likes Chart</label>
+			<div id="chartLikes_div"></div>
+			<!-- Loads the javaScript file that creates a line chart for pressure. -->
+			<label>Pressure Chart</label>
+			<div id="chartLang_div"></div>
+			<div />
+	</div>
+	</div>
+</body> 
+</html>

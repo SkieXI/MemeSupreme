@@ -1,0 +1,18 @@
+{
+  "plugins": {
+    "guess-types": {
+      
+    },
+    "outline": {
+      
+    },
+    "complete_strings": {
+      
+    }
+  },
+  "libs": [
+    "browser",
+    "jquery"
+  ],
+  "ecmaVersion": 6
+}

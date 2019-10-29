@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<head></head>
+
+<body>
+	<div align="center">
+	<h2>Register</h2>
+	<h:form>
+		Username: <h:inputText id="uName" value="#{user.uName}" title="" /> <br/>
+		Email: <h:inputText id="email" value="#{user.email}" title="" /><br/>
+		password: <h:inputText type="password" id="password" value="#{user.password}" title="" /><br/>
+			
+			<h:commandButton value="Submit" action="#{userController.Register(user)}" />
+	<h:form>
+			<h:button value="Back" outcome="Index.xhtml" />
+	</h:form>
+	</h:form>
+	</div>
+
+</body>
+      
+</html>
