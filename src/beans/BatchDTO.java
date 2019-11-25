@@ -35,6 +35,7 @@ public class BatchDTO implements BatchDTOInterface
 		items = null;
 	}
 	
+	//Getters and Setters.
 	public int getStatus() {
 		return status;
 	}

@@ -23,12 +23,18 @@ import beans.BatchItems;
 import data.BatchDataInterface;
 import util.LoggingInterceptor;
 
+/**
+ * This class is used for the business logic of processing all information from the Minimeme and the database.
+ * @author jleon
+ *
+ */
 @Stateless
 @Local(TwitterInterface.class)
 @LocalBean
 @Interceptors(LoggingInterceptor.class)
 public class TwitterManager implements TwitterInterface<BatchItems>
 {
+	//New instance of the logger.
 	Logger logger = LoggerFactory.getLogger(TwitterManager.class);
 	
 	@EJB
@@ -42,7 +48,8 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	public void PullnSave(BatchItems items)
 	{
 		logger.info("PullnSave called");
-		
+		//I think this might be where our timer will go.
+		//TODO : Add in logic.
 		logger.info("PullnSave Complete");
 	}
 	
@@ -55,6 +62,7 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	public void SaveNSave(BatchItems data)
 	{
 		logger.info("SaveNSave called");
+		//This method is more or less to save all information to a databse.
 		logger.info("SaveNSave Complete");
 	}
 	/** This pulls all information from the database and saves it to a bean of {@link TwitterResponseData}
@@ -64,20 +72,27 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	 */
 	public List<BatchItems> getAllData() 
 	{
+		//Logger telling us that we entered the method.
 		logger.info("Starting TwitterManager.getAllData()");
+		//List of BatchItems that is populated by the BatchDataService.findall() method.
 		List<BatchItems> biList = BDI.findall();
-		
-		//biList = BDI.findall();
-		
 		logger.info("TwitterManager.getAllData() Complete");
+		//return the list.
 		return biList;
 	}
 
+	/**Pulls information from the database at specificed points using the int t
+	 * int t = the AA number in the databse.
+	 * 
+	 */
 	public BatchItems getData(int t) 
 	{
 		logger.info("getData called| TwitterManger.getData(" + t + ")");
 		BatchItems bi = new BatchItems();
+		//Create a new instance of BatchItems that is populated by the BatchDataService.findby(t) method.
 		bi = BDI.findby(t);
+		logger.info("TwitterManager.getData(" + t + ") Complete");
+		//Returns the single entry.
 		return bi;
 	}
 	

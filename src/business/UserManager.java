@@ -23,12 +23,8 @@ import business.UserInterface;
 @LocalBean
 public class UserManager implements UserInterface <User>
 { 
-	/**
-	 * 
-	 */
 	@EJB
 	UserDataInterface<User> UDA;
-	
 	
 	/**
 	 * Method ask the UserDTO to find if a user already exist within the database. 
@@ -36,8 +32,9 @@ public class UserManager implements UserInterface <User>
 	 * @return bool
 	 * @see UserDataInterface#findBy(Object)
 	 */
-	//@Override
+	@Override
 	public boolean checkExistance(User user) {
+		//If there is no matching users of the provided information, return false.
 		if (UDA.findBy(user).getuName().equals(user.getuName())) {
 			return false;
 		} else
@@ -45,7 +42,9 @@ public class UserManager implements UserInterface <User>
 	}
 	
 	/**
-	 * TODO: THis is the method that needs to be updated to check both user name AND Password.
+	 * This method searches for both a user and password to see if both entries match at once in the database.
+	 * @param User
+	 * @return boolean
 	 */
 	public boolean validateLogin(User user) {
 		if (UDA.findBy(user).getuName().equals(user.getuName()) && UDA.findBy(user).getPassword().equals(user.getPassword())) {

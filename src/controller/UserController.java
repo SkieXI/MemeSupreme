@@ -39,10 +39,9 @@ import util.UserNotFoundException;
 @Stateless
 public class UserController implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	//Calling in different beans and parts of the application.
 	@Inject
 	UserInterface<User> UI;
 	
@@ -70,15 +69,19 @@ public class UserController implements Serializable
 			logger.info("Registration process started: Entering try block.");
 			//Gets the information from the textfields in the Register.xhtml page.
 			FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("user", user);
+			//If the check for an existing user turns out false fails, then it grants the user access to the MainMenu.xhtml.
+			//Should fix in future since its a double negiative. 
 			if(!UI.checkExistance(user) == false)
 			{
 				logger.info("Regstration successful: Returning MainMenu.xhtml");
+				//Create a new user in the database.
 				UI.processRegister(user);
 				return "MainMenu.xhtml";
 			}
 			else
 			{
 				logger.info("Regstration failed: Returning _REgistrationFailed.xhtml");
+				//If the process fails, or the validation fails, then it returns _RegistrationFailed.xhtml page.
 				return "_RegistrationFailed.xhtml";
 			}
 		}
@@ -102,8 +105,10 @@ public class UserController implements Serializable
 		logger.info("Starting login process.");
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("user", user);
 		
+		//Try to find a user from the database.
 		try 
 		{
+			//If a user is found, then it returns the MainMenu.xhtml page.
 			if(!UI.validateLogin(user) == true)
 			{
 				logger.info("Login successful: Returning MainMenu.xhtml");
@@ -111,27 +116,19 @@ public class UserController implements Serializable
 			}
 			else
 			{
+				//If there isn't any users found, then it returns with a _LoginFailed.xhtml page.
 				logger.info("Login failed: Returning _LoginFailed.xhtml");
 				return "_LoginFailed.xhtml";
 			}
 		} 
 		catch (UserNotFoundException e) 
 		{	
+			//If something goes wrong in the login process. Then just return _Loginfailed anyway.
 				logger.info("I don't know what to tell you chief: Returning _LoginFailed.xhtml");
 				return "_LoginFailed.xhtml";
 		}
 
 	}
-	
-	public String Test()
-	{
-		System.out.println("===");
-		System.out.println("Process Finished.");
-		logger.info("Uh...");
-
-		return "MainMenu.xhtml";
-	}
-	
 	
 	/**This method was created to make a more effecent means of testing out the Twitter API.
 	 * It may go unused in the final version. But it is fun to just play around with the search feature and see what comes up.
@@ -141,15 +138,6 @@ public class UserController implements Serializable
 	 */
 	public String Search(Search search)
 	{
-		try {
-		
-			logger.info("Starting a search based on: " + search.getSearch());
-
-		}
-		catch(DatabaseException e) {
-			logger.info("Nothing Found in the database.");
-			System.out.println("================> Tweets Not Found");
-		}
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
 		logger.info("Search found: returning MainMenu.xhtml");
 

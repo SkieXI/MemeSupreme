@@ -1,3 +1,9 @@
+/**
+CST-361
+11-20-2019
+This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+Interface for Facotry Pattern.
+**/
 package beans;
 
 public interface BatchDTOInterface 

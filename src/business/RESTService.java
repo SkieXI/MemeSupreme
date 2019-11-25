@@ -3,6 +3,8 @@
  * This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
  * We used source code from the inclass activity as a template.
  * with one another.
+ * Work cited:
+ * https://www.oreilly.com/library/view/java-ee-7/9781449370589/ch04.html
  */
 package business;
 
@@ -51,7 +53,6 @@ public class RESTService
 {
 	@EJB
 	TwitterInterface<BatchItems> TI;
-	//TwitterManager TMG = new TwitterManager();
 	
 	@Inject
 	BatchDataInterface<BatchItems> BDI;
@@ -69,19 +70,27 @@ public class RESTService
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<BatchItems> getAllData() 
 	{
-		logger.info("Entering Methiod | RESTService.getAllData");
+		logger.info("Getting all data from database | RESTService.getAllData");
 		try
 		{
+			//Create a new instance of Batchitems list.
 			List<BatchItems> bi = TI.getAllData();
+			//returns BatchItems.
 			return bi;
 		}
 		catch (Exception e)
 		{
+			//When failed, retunrs nothing.
 			logger.info("Method Failed. | RESTService.getAllData");
 			return null;
 		}
 	}
 	
+	/**
+	 * This is used to call in a specific record of a batch for one at a time.
+	 * @param id
+	 * @return
+	 */
 	@GET
 	@Path("/getdata/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -90,28 +99,39 @@ public class RESTService
 		logger.info("Entering Methiod | RESTService.getData()");
 		try
 		{
+			//New instance of BatchItems that is populated by information from BatchDataServices.getData() using the id provided.
 			BatchItems bi = TI.getData(id);
+			//New list of BatchItems.
 			List<BatchItems> bis = new ArrayList<BatchItems>();
+			//For each entry found, add it to the list.
 			bis.add(bi);
 			logger.info("Data gathered Succesffully!| RESTService.getData()");
+			//Return said list.
 			return bis;
 			
 		}
 		catch(Exception e)
 		{
 			logger.info("Failed to gather data. | RESTService.getData()");
+			return null;
 		}
-		return null;
 	}
 	
+	/**This method is used to call in the outboundData method found in MiniMeme.
+	 * This returns default data.
+	 * @param items
+	 */
 	@POST
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public void setData(BatchItems items) {
 
-		logger.info("Data Recieved:" + items + "| RESTService.setData()");
+		logger.info("Retreving data for: " + items + "| RESTService.setData()");
+		//Try to get information from Minimeme.
 		try {
+			//This is the most expiremental part of the whole project. 
+			//What we are doing is creating an HTML call to Minimeme and having it return us with a lot of default data.
 		Client client = ClientBuilder.newClient();
 		BatchDTO BTO = client.target("http://localhost:8080/MiniMeme/rest/tweets/outboundData").request()
 				.post(Entity.entity(new BatchDTO(), "application/json"), 
@@ -125,11 +145,18 @@ public class RESTService
 			// put data in database
 			TI.SaveNSave(items);
 			logger.info("Data Successfully put into Database. | RESTService.setData()");
+			
+			//If unable to gather information, then throw Exception e.
 		} catch (Exception e) {
 			logger.error("An error occured putting data into database. |RESTService.setData()");
 		}
 	}
 	
+	/**This is used to call the inboundData in Minimeme.
+	 * The idea is that this method calls inbounData and provides the information from what a user
+	 * searches for in the MainMenu.xhtml page and that in turn would start the whole process up.
+	 * 
+	 */
 	@GET
 	@Path("/bridge")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -137,8 +164,11 @@ public class RESTService
 	public void Bridge()
 	{
 		logger.info("Entering method | RESTService.Bridge()");
+		//Create a new instances of Search and BatchItems.
 		Search se = new Search();
 		BatchItems items = new BatchItems();
+		
+		//Try to get data from Mimimeme.
 		try
 		{
 		Client client = ClientBuilder.newClient();
@@ -153,6 +183,8 @@ public class RESTService
 			// put data in database
 			TI.SaveNSave(items);
 			logger.info("Data Successfully put into Database. | RESTService.Bridge()");
+			
+			//If unable to gather information, throw Exception e.
 		} catch (Exception e) {
 			logger.error("An error occured putting data into database. | RESTService.Bridge()");
 		}

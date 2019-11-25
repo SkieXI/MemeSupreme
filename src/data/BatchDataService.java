@@ -1,3 +1,8 @@
+/**CST-361
+ * 11-20-19
+ * This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+ * This is the DTO for all processes and methods related to the BatchItems and the information gathered from MiniMeme.
+ */
 package data;
 
 import java.sql.Connection;
@@ -35,6 +40,9 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 		
 		Logger logger = LoggerFactory.getLogger(BatchDataService.class);
 		
+		/**This pulls everything from the database.
+		 * @return List<BatchItems>
+		 */
 	public List<BatchItems> findall() {
 		Connection conn = null;
 		List<BatchItems> bi = new ArrayList<BatchItems>();
@@ -43,10 +51,12 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 			logger.info("Pulling info from the database | BatchDTO.findall()");
 			conn = DriverManager.getConnection(url, username, password);
 			
+			//SQL statement.
 			String sql1 = "SELECT * FROM BATCHRECORDS";
 			Statement stmt1 = conn.createStatement();
 			ResultSet rs1 = stmt1.executeQuery(sql1);
 			
+			//For each entry in the database, it will be added to the list of BatchItems.
 			while (rs1.next()) 
 			{
 				BatchItems bit = new BatchItems(rs1.getInt("RETWEETS"), rs1.getInt("LIKES"), rs1.getInt("TWEETCOUNT")); 
@@ -81,6 +91,10 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 		return bi;
 	}
 
+	/**This create a new entry into the database each tiem the timer goes off and a new batch of information is pulled from Minimeme.
+	 * @param BatchItems
+	 * @return boolean
+	 */
 	public boolean create(BatchItems bi) {
 		Connection conn = null;
 		try
@@ -128,6 +142,10 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 		return false;
 	}
 
+	/**This is used to find a specific record or batch from the database.
+	 * @param int 
+	 * @return BatchItems
+	 */
 	public BatchItems findby(int id) 
 	{
 		Connection conn = null;

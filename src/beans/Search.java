@@ -15,15 +15,7 @@ import javax.faces.bean.ViewScoped;
 @ViewScoped
 public class Search 
 {
-	//Make the constructors private so taht thsi call cannot be instantiated.
-	//priate SingleObject() {}
-	
-	//Make the thing Threat safe.
-	//public SYNCHRONIZE static SingleObject get Instance() {}
-	
-	
-	
-	
+	//This bean is to be used with the .xhtml pages where you can set what to search for.
 	//To make a search, you need a String to search up, and a int for how many results you want.
 	private String Search;
 	private int count;

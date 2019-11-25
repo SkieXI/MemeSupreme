@@ -60,6 +60,8 @@ public class UserDataService implements UserDataInterface<User>
 			String sql1 = "SELECT * FROM USER";
 			Statement stmt1 = conn.createStatement();
 			ResultSet rs1 = stmt1.executeQuery(sql1);
+			//For each entry found, that row is going to be added to a list of users.
+			//This entire method seems like a huge security risk.
 			while (rs1.next()) 
 			{
 				User user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"));
