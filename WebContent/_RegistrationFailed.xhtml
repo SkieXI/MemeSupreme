@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"> 
 
-<head></head>
-
+<h:head></h:head> 
 <body>
 	<div align="center">
 	<h2>Register</h2>
+	<h3>Username already taken.</h3>
 	<h:form>
 		Username: <h:inputText id="uName" value="#{user.uName}" title="" /> <br/>
 		Email: <h:inputText id="email" value="#{user.email}" title="" /><br/>
@@ -17,6 +17,7 @@
 		<h:message for="uName"/><br/>
 		<h:message for="email"/><br/>
 		<h:message for="password"/><br/>
+			
 			<h:commandButton value="Submit" action="#{userController.Register(user)}" />
 	<h:form>
 			<h:button value="Back" outcome="Index.xhtml" />

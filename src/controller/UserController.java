@@ -8,34 +8,51 @@
 
 package controller;
 
+import java.io.Serializable;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.interceptor.Interceptors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import beans.User;
+import beans.BatchItems;
 import beans.Search;
-import beans.SearchData;
-import beans.TwitterItems;
-import beans.TwitterResponseData;
-import business.OutBoundREST;
+import business.TwitterInterface;
 import business.TwitterManager;
 import business.UserInterface;
-import data.TwitterConnection;
-import data.TwitterDataInterface;
+import data.BatchDataInterface;
+import util.DatabaseException;
+import util.LoggingInterceptor;
 import util.UserNotFoundException;
 
-@ManagedBean
+@Interceptors(LoggingInterceptor.class)
+@Named
 @ViewScoped
 @Stateless
-public class UserController 
+public class UserController implements Serializable
 {
-	@EJB
-	UserInterface UI;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@Inject
+	UserInterface<User> UI;
 	
 	@EJB
-	TwitterDataInterface TDA;
+	TwitterInterface<BatchItems> TI;
+	
+	@EJB
+	BatchDataInterface<BatchItems> BTI;
+	
+	Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	
 	/**Method grabs the infromation from the webpage and then sends it off to the UserInterface which then checks to see if
@@ -50,23 +67,26 @@ public class UserController
 	public String Register(User user) 
 	{
 		try {
+			logger.info("Registration process started: Entering try block.");
 			//Gets the information from the textfields in the Register.xhtml page.
 			FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("user", user);
 			if(!UI.checkExistance(user) == false)
 			{
+				logger.info("Regstration successful: Returning MainMenu.xhtml");
 				UI.processRegister(user);
 				return "MainMenu.xhtml";
 			}
 			else
 			{
-				
-				return "Register.xhtml";
+				logger.info("Regstration failed: Returning _REgistrationFailed.xhtml");
+				return "_RegistrationFailed.xhtml";
 			}
 		}
 	//If it fails, then it will return the register page again.
 		catch(UserNotFoundException e) 
 		{
-			return "Register.xhtml";
+			logger.info("Something went terribly wrong: Returning RegistrationFialed.xhtml");
+			return "_RegistrationFailed.xhtml";
 		}
 	}
 	
@@ -79,42 +99,36 @@ public class UserController
 	 */
 	public String login(User user) 
 	{
+		logger.info("Starting login process.");
+		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("user", user);
+		
 		try 
 		{
-			FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("user", user);
 			if(!UI.validateLogin(user) == true)
 			{
-				System.out.println("Tthis is a test.");
-				
-				//prints list of searched tweets
-				//System.out.println(TDA.wordSearch("Thing", 30));
+				logger.info("Login successful: Returning MainMenu.xhtml");
 				return "MainMenu.xhtml";
 			}
 			else
 			{
-				return "Login.xhtml";
+				logger.info("Login failed: Returning _LoginFailed.xhtml");
+				return "_LoginFailed.xhtml";
 			}
 		} 
 		catch (UserNotFoundException e) 
 		{	
+				logger.info("I don't know what to tell you chief: Returning _LoginFailed.xhtml");
+				return "_LoginFailed.xhtml";
 		}
-	return "MainMenu.xhtml";
+
 	}
 	
 	public String Test()
 	{
+		System.out.println("===");
+		System.out.println("Process Finished.");
+		logger.info("Uh...");
 
-		System.out.println("Mini Test 1");
-		TwitterManager tw = new TwitterManager();
-		TwitterItems ti = new TwitterItems();
-		System.out.println("Mini Test 2");
-		System.out.println("Test 2.5???????!");
-		
-		System.out.println("Mini Test 3");
-		tw.SaveNSave(ti);
-		System.out.println("Mini Test 4");
-		tw.getAllData();
-		System.out.println("FINALLY CELAR!");
 		return "MainMenu.xhtml";
 	}
 	
@@ -127,29 +141,18 @@ public class UserController
 	 */
 	public String Search(Search search)
 	{
+		try {
+		
+			logger.info("Starting a search based on: " + search.getSearch());
 
-		System.out.println("Test 1");
+		}
+		catch(DatabaseException e) {
+			logger.info("Nothing Found in the database.");
+			System.out.println("================> Tweets Not Found");
+		}
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
-		TwitterConnection tconn = new TwitterConnection();
-		System.out.println(tconn.wordSearch(search.getSearch(), search.getCount()));
-		/*
-		OutBoundREST REST = new OutBoundREST();
-		SearchData DATA = new SearchData();
-		
-		System.out.println(search.getSearch());
-		System.out.println(search.getCount());
-		DATA.setData(search);
-		System.out.println("Test 2");
-		
-		DATA.setSearch(search.getSearch());
-		DATA.setCount(search.getCount());
-		
-		System.out.println("TEST 2.5");
-		System.out.println(DATA.getSearch());
-		REST.Search(DATA);		
-		System.out.println("Test 3");
+		logger.info("Search found: returning MainMenu.xhtml");
 
-*/
 		return "MainMenu.xhtml";
 	}
 }

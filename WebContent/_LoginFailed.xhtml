@@ -3,17 +3,17 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"> 
-      
+
 <h:head><title>Meme Supreme Login</title></h:head>
 <body>
 	<h2>Login</h2>
+	<h3>Username or password don't match</h3>
 	<div align="center">
 		<h:form>
 		
 		
 		Email:<h:inputText id="uName" value="#{user.uName}" title="" /><br />
 		Password:<h:inputText id="Password" type="password" value="#{user.password}" title="" /><br /><br />
-		
 		<h:message for="uName"/><br/>
 		<h:message for="password"/>
 		<h:commandButton value="Submit" action="#{userController.login(user)}" />

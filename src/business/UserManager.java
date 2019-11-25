@@ -14,14 +14,14 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
 import beans.User;
-import data.UserDTO;
+import data.UserDataService;
 import data.UserDataInterface;
 import business.UserInterface;
 
 @Stateless
 @Local(UserInterface.class)
 @LocalBean
-public class UserManager implements UserInterface
+public class UserManager implements UserInterface <User>
 { 
 	/**
 	 * 
@@ -60,7 +60,7 @@ public class UserManager implements UserInterface
 	 * 
 	 * @param User user
 	 * @return user
-	 * @see UserDTO#create(User)
+	 * @see UserDataService#create(User)
 	 */
 	public User processRegister(User user) {
 		UDA.create(user);

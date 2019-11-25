@@ -6,87 +6,80 @@
  */
 package business;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.interceptor.Interceptors;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 
-import beans.TwitterItems;
-import beans.TwitterResponseData;
-import data.TwitterConnection;
-import data.TwitterDTO;
-import data.TwitterDataInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class TwitterManager 
+import beans.BatchItems;
+import data.BatchDataInterface;
+import util.LoggingInterceptor;
+
+@Stateless
+@Local(TwitterInterface.class)
+@LocalBean
+@Interceptors(LoggingInterceptor.class)
+public class TwitterManager implements TwitterInterface<BatchItems>
 {
-	@EJB 
-	TwitterDataInterface TDA;
-
+	Logger logger = LoggerFactory.getLogger(TwitterManager.class);
+	
+	@EJB
+	BatchDataInterface<BatchItems> BDI;
 	/**This class is dummied out since this logic should have gone in a controller instead. 
 	 * It call the methods SaveNSave() and then getAllData().
 	 * 
 	 *@param tDatas
 	 *@return TDates
-	/*
-	public TwitterResponseDatas PullnSave(String word, int count)
-	{
-		//TwitterConnection TConn = new TwitterConnection();
-		TwitterResponseData TDatas = new TwitterResponseData();
-		TDatas = this.getAllData();
-				TwitterResponseData TRD = new TwitterResponseData();
-		
-		this.SaveNSave(TDatas);
-		return TDatas;
-		
-	}
 	*/
+	public void PullnSave(BatchItems items)
+	{
+		logger.info("PullnSave called");
+		
+		logger.info("PullnSave Complete");
+	}
+	
 	/**This takes in the results from {@link TwitterConnection#wordSearch(String, int)}
 	 * And saves those results to a database.
 	 * @input 
 	 * @param tDatas
 	 * @return void
 	 */
-	public void SaveNSave(TwitterItems tDatas)
+	public void SaveNSave(BatchItems data)
 	{
-		//Test line.
-		System.out.println("Mini Save Test 1");
-		
-		TwitterDTO DTO = new TwitterDTO();
-		
-		//Create a new instance of TwitterConnection, and that places the return of #wordSearch into the object of tDatas.
-		TwitterConnection tconn = new TwitterConnection();
-		tDatas = tconn.wordSearch("Idaho", 1);
-		System.out.println(tDatas.getScreenName());
-		System.out.println("Mini Save Test 2");
-		//For loop for each entry.
-		System.out.println(tDatas.getScreenName());
-		//Saves the object into the TwitterDTO create().
-		DTO.create(tDatas);
-		System.out.println("Mini Save Test 3");
+		logger.info("SaveNSave called");
+		logger.info("SaveNSave Complete");
 	}
 	/** This pulls all information from the database and saves it to a bean of {@link TwitterResponseData}
-	 * This is what the REST service {@link TwitterREST#getAllData()} uses.
+	 * This is what the REST service {@link RESTService#getAllData()} uses.
 	 * @param 
 	 * @return datas
 	 */
-	public TwitterResponseData getAllData() 
+	public List<BatchItems> getAllData() 
 	{
-		System.out.println("Mini Load Test 1");
+		logger.info("Starting TwitterManager.getAllData()");
+		List<BatchItems> biList = BDI.findall();
 		
-		TwitterDTO DTO = new TwitterDTO();
+		//biList = BDI.findall();
 		
-		//Creates a new instance of TwitterResponseData.
-		TwitterResponseData datas = new TwitterResponseData();
-		System.out.println("Mini Load Test 2");
-		
-		//Sets the values of this new object from what is pulled from the database in Twitter DTO#findAll();
-		datas.setItems(DTO.findAll());
-		System.out.println(datas.getItems().size());
-		System.out.println("Mini Load Test 3");
-		return datas;
-				
-				//(List<TwitterItems>) datas;
-		
+		logger.info("TwitterManager.getAllData() Complete");
+		return biList;
 	}
+
+	public BatchItems getData(int t) 
+	{
+		logger.info("getData called| TwitterManger.getData(" + t + ")");
+		BatchItems bi = new BatchItems();
+		bi = BDI.findby(t);
+		return bi;
+	}
+	
 
 }

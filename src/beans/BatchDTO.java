@@ -6,24 +6,33 @@ This class is used for REST services.
 **/
 package beans;
 
-public class ResponseModel 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "Response")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class BatchDTO implements BatchDTOInterface
 {
 	//Variables with a int for a status, and a String for a message.
 	private int status;
 	private String message;
+	private BatchItems items;
 	
 	//Non-default constructor.
-	public ResponseModel(int status, String message)
+	public BatchDTO(int status, String message, BatchItems items)
 	{
 		super();
 		this.status = status;
 		this.message = message;
+		this.items = items;
 	}
-	public ResponseModel()
+	public BatchDTO()
 	{
 		super();
 		message = "";
 		status = 0;
+		items = null;
 	}
 	
 	public int getStatus() {
@@ -37,5 +46,13 @@ public class ResponseModel
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	@Override
+	public BatchItems getItems() {
+		return items;
+	}
+	@Override
+	public void setItems(BatchItems items) {
+		this.items = items;
 	}
 }

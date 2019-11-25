@@ -16,6 +16,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -23,20 +26,23 @@ import javax.interceptor.Interceptors;
 
 import beans.User;
 import data.UserDataInterface;
+import util.LoggingInterceptor;
 
 @Stateless
 @Local(UserDataInterface.class)
 @LocalBean
-public class UserDTO implements UserDataInterface<User>
+@Interceptors(LoggingInterceptor.class)
+public class UserDataService implements UserDataInterface<User>
 {
 	
-	//
+	//Strings containing information to connect to the database.
 	Connection conn = null;
 	String url = "jdbc:mysql://localhost:3306/memesupreme";
 	String username = "root";
 	String password = "root";
 	
-
+	//New instance of the logger for this class.
+	Logger logger = LoggerFactory.getLogger(UserDataService.class);
 	/**This provides a huge list of everything within the database.
 	 * @param 
 	 * @return users
@@ -45,6 +51,7 @@ public class UserDTO implements UserDataInterface<User>
 	{
 		List<User> users = new ArrayList<User>();
 		
+		logger.info("Finding all users.| UserDTO.findAll()");
 		try {
 			// Connect to the Database
 			conn = DriverManager.getConnection(url, username, password);
@@ -62,6 +69,7 @@ public class UserDTO implements UserDataInterface<User>
 			// Cleanup
 			rs1.close();
 			stmt1.close();
+			logger.info("Search successful, closing connection.| UserDTO.findAll()");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -70,6 +78,7 @@ public class UserDTO implements UserDataInterface<User>
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					logger.info("Search unsuccessful.| UserDTO.findAll()");
 					e.printStackTrace();
 				}
 			}
@@ -90,6 +99,8 @@ public class UserDTO implements UserDataInterface<User>
 			// Connect to the Database
 			conn = DriverManager.getConnection(url, username, password);
 
+			logger.info("Searching for: " + user.getuName() + ".| UserDTO.findById()");
+			
 			// Execute SQL Query and loop over result set
 			String sql1 = String.format("SELECT * FROM USER WHERE USER_ID='%S'",id);
 			Statement stmt1 = conn.createStatement();
@@ -100,6 +111,7 @@ public class UserDTO implements UserDataInterface<User>
 			// Cleanup
 			rs1.close();
 			stmt1.close();
+			logger.info("Search found!| UserDTO.findById()");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -108,6 +120,7 @@ public class UserDTO implements UserDataInterface<User>
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					logger.info("Unable to search the database.| UserDTO.findById()");
 					e.printStackTrace();
 				}
 			}
@@ -123,8 +136,9 @@ public class UserDTO implements UserDataInterface<User>
 		User user2 = new User();
 		try {
 			// Connect to the Database
-			
 			conn = DriverManager.getConnection(url, username, password);
+			
+			logger.info("Searching for just: " + user2.getuName() + ".| UserDTO.findby()");
 			// Execute SQL Query and loop over result set
 			String sql1 = String.format("SELECT * FROM USER WHERE UNAME= '%S'", user.getuName());
 			Statement stmt1 = conn.createStatement();
@@ -136,6 +150,7 @@ public class UserDTO implements UserDataInterface<User>
 			
 			rs1.close();
 			stmt1.close();
+			logger.info("Search successful!| UserDTO.findby()");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -144,6 +159,7 @@ public class UserDTO implements UserDataInterface<User>
 				try {
 					conn.close();
 				} catch (SQLException e) {
+					logger.info("Failed to search the database.| UserDTO.findby()");
 					e.printStackTrace();
 				}
 			}
@@ -158,6 +174,8 @@ public class UserDTO implements UserDataInterface<User>
 	public boolean create(User user) 
 	{
 		// Insert User
+		logger.info("Adding " + user.getuName() + " to the database.| UserDTO.create()");
+		
 				try {
 					// Connect to the Database
 					conn = DriverManager.getConnection(url, username, password);
@@ -178,11 +196,13 @@ public class UserDTO implements UserDataInterface<User>
 						try {
 							conn.close();
 						} catch (SQLException e) {
+							logger.info("Unable to add this user to the database.| UserDTO.findAll()");
 							e.printStackTrace();
 						}
 					}
 				}
 
+				logger.info(user.getuName() + " was successfully registered to the database!| UserDTO.create()");
 				// Return OK
 				return true;
 	}
