@@ -1,8 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"> 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"> 
+      
 <h:head>
 	<title><ui:insert name="MemeSupreme">Main Menu</ui:insert></title>
 
@@ -23,28 +24,33 @@
 		src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 	<script type="text/javascript">
 	//All of this was from Mark Moot as we were panicking at the last minute and we were hitting our heads for at least 3 hours.
-	function getMemes() {
+	function getUserData() {
 		$.ajax(
 				{
 				   type: "GET",
-				   url: "/MemeSupreme/rest/tweets/getalldata",
+				   url: "/MemeSupreme/rest/tweets/getAllUsers",
 				   dataType: "json",
 				   success: function(data)
 				{
 
 				//Display
-				$('#twitterItems2').dataTable({
+				$('#userItems').dataTable({
 					"responsive" : true,
 					"data" : data,
 					"columns" : [ {
-						"data" : "tweetsTotal",
+						"data" : "email",
 						"reposonsivePriority" : 1
 					}, {
-						"data" : "likesTotal",
+						"data" : "password",
 						"responsivePriority" : 2
 					}, {
-						"data" : "retweetTotal",
+						"data" : "isMod",
 						"reposonsivePriority" : 3
+					}, {
+						"data" : "UID",
+						"responsivePriority" : 4, "render" : function(data, type, full, meta) {
+						return '<a href="/MemeSupreme/EditUser/' + data + '">Edit </a>';
+						}
 					} ]
 				
 				});
@@ -57,6 +63,41 @@
 		})
 	}
 
+	function getMemes() {
+		$.ajax(
+				{
+				   type: "GET",
+				   url: "/MemeSupreme/rest/tweets/getalldata",
+				   dataType: "json",
+				   success: function(data)
+				{
+
+				//Display
+					$('#twitterItems').dataTable({
+						"responsive" : true,
+						"data" : data,
+						"columns" : [ {
+							"data" : "tweetsTotal",
+							"reposonsivePriority" : 1
+						}, {
+							"data" : "likesTotal",
+							"responsivePriority" : 2
+						}, {
+							"data" : "retweetTotal",
+							"reposonsivePriority" : 3
+						} ]
+					
+					});
+				},
+
+			error : function(xhr, ajaxOptions, throwError) {
+				alert(xhr.status);
+				alert(throwError);
+			},
+		})
+	}
+
+	$(document).ready(getUserData);
 	$(document).ready(getMemes);
 </script>
 <h:outputStylesheet library="css" name="Main.css" />
@@ -64,10 +105,16 @@
 <body> 
 	<div align="left">
 	<h1>Meme Supreme</h1>
-	<h3>Main Menu.</h3>
+	<h3>Admin Menu.</h3>
 	</div>
-	<div align="center">
-	
+		<div align="center">
+		<h:form>
+			Search: <h:inputText id = "search" value= "#{search.search}" title ="" />
+			Number to search: <h:inputText id = "count" value= "#{search.count}" title ="" />
+			<br/>
+			<h:commandButton value="Search" action="#{userController.Search(search)}" />
+			<h:commandButton value="Save Tweets" action="#{userController.Test()}" /><br/>
+		</h:form>
 		<h:form>
 			<h:button value="Logout" outcome="Index.xhtml" />
 		</h:form>
@@ -76,7 +123,22 @@
 		<div class="hero-image">
 		<div class="hero-text">
 		
-			<table id="twitterItems2" width="75%">
+			<table id="userItems" width="50%">
+				<thead>
+					<tr>
+						<th><label>UserName</label></th>
+						<th><label>Password</label></th>
+						<th><label>Mod Status</label></th>
+						<th><label>Edit</label></th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		</div>
+		<div class="hero-image">
+		<div class="hero-text">
+		
+			<table id="twitterItems" width="75%">
 				<thead>
 					<tr>
 						<th><label>Tweets Count</label></th>
@@ -85,17 +147,7 @@
 					</tr>
 				</thead>
 			</table>
-			<!-- Loads the Javascript file that creates a line chart for temperatureC. -->
-			<label>Retweet Chart</label>
-			<div id="chartRetweets_div"></div>
-			<!-- Loads the Javascript file that creates a line chart for temperatureF. -->
-			<label>Likes Chart</label>
-			<div id="chartLikes_div"></div>
-			<!-- Loads the javaScript file that creates a line chart for pressure. -->
-			<label>Pressure Chart</label>
-			<div id="chartLang_div"></div>
-			<div />
-	</div>
-	</div>
-</body> 
+		</div>
+		</div>
+	</body>
 </html>

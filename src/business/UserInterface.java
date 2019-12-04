@@ -8,11 +8,15 @@
 
 package business;
 
+import beans.User;
+
 public interface UserInterface <T>
 {
-	boolean validateLogin(T t);
+	int validateLogin(T t);
 	
 	boolean checkExistance(T t);
 
 	T processRegister(T t);
+
+	boolean checkAdmin(T t);
 }

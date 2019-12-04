@@ -36,10 +36,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import data.BatchDataInterface;
+import data.UserDataInterface;
 import beans.BatchDTO;
 import beans.BatchDTOInterface;
 import beans.BatchItems;
 import beans.Search;
+import beans.User;
 import util.DataFactory;
 import util.LoggingInterceptor;
 
@@ -56,6 +58,9 @@ public class RESTService
 	
 	@Inject
 	BatchDataInterface<BatchItems> BDI;
+	
+	@Inject
+	UserDataInterface<User> UDS;
 	
 	Logger logger = LoggerFactory.getLogger(RESTService.class);
 	
@@ -187,6 +192,25 @@ public class RESTService
 			//If unable to gather information, throw Exception e.
 		} catch (Exception e) {
 			logger.error("An error occured putting data into database. | RESTService.Bridge()");
+		}
+	}
+	@GET
+	@Path("/getAllUsers")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<User> getAllUsers()
+	{
+
+		logger.info("Entering Method | RESTService.getAllUsers()");
+		try
+		{
+			// List<User> LU = UDS.findAll()
+					return UDS.findAll();
+		}
+		catch(Exception e)
+		{
+			logger.info("Failed to generate list | RESTService.getAllUsers()");
+			return null;
 		}
 	}
 }

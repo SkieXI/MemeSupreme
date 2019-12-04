@@ -46,11 +46,18 @@ public class UserManager implements UserInterface <User>
 	 * @param User
 	 * @return boolean
 	 */
-	public boolean validateLogin(User user) {
+	public int validateLogin(User user) {
 		if (UDA.findBy(user).getuName().equals(user.getuName()) && UDA.findBy(user).getPassword().equals(user.getPassword())) {
-			return false;
-		} else
-			return true;
+			{
+				if(checkAdmin(user) == true)
+				{
+					return 2;
+				}
+				return 1;
+			}
+		} 
+		else
+		return 0;
 	}
 	//Trusted Softward development methodlogices. 
 	
@@ -64,6 +71,17 @@ public class UserManager implements UserInterface <User>
 	public User processRegister(User user) {
 		UDA.create(user);
 		return user;
+	}
+	
+	@Override
+	public boolean checkAdmin(User user)
+	{
+		if(UDA.findBy(user).getIsMod() == 1)
+		{
+			System.out.println(UDA.findBy(user).getIsMod());
+			return true;
+		}else
+			return false;
 	}
 	
 }

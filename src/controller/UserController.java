@@ -109,15 +109,36 @@ public class UserController implements Serializable
 		try 
 		{
 			//If a user is found, then it returns the MainMenu.xhtml page.
-			if(!UI.validateLogin(user) == true)
+			if(UI.validateLogin(user) == 1)
 			{
-				logger.info("Login successful: Returning MainMenu.xhtml");
+				logger.info("Noraml login successful: Returning MainMenu.xhtml");
 				return "MainMenu.xhtml";
 			}
-			else
+			if(UI.validateLogin(user) == 2)
+			{
+				logger.info("Admin login successful: Returning MainMenu.xhtml");
+				return "AdminMain.xhtml";
+			}
+			if(UI.validateLogin(user) == 0)
+			{
+				logger.info("Login failed: Admin level = 0: Returning _LoginFailed.xhtml");
+				return "_LoginFailed.xhtml";
+			}
+				/*
+				if (user.getIsMod() == 0)
+				{
+				logger.info("Noraml login successful: Returning MainMenu.xhtml");
+				return "MainMenu.xhtml";
+				}
+				if (user.getIsMod() == 1)
+				{
+					logger.info("Admin login successful: Returning AdminMain");
+					return "AdminMain.xhtml";
+				}
+				*/
 			{
 				//If there isn't any users found, then it returns with a _LoginFailed.xhtml page.
-				logger.info("Login failed: Returning _LoginFailed.xhtml");
+				logger.info("Login failed hard: Returning _LoginFailed.xhtml");
 				return "_LoginFailed.xhtml";
 			}
 		} 
