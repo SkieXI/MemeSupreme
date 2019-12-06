@@ -13,7 +13,7 @@
 		
 		
 		Email:<h:inputText id="uName" value="#{user.uName}" title="" /><br />
-		Password:<h:inputText id="Password" type="password" value="#{user.password}" title="" /><br /><br />
+		Password:<h:inputSecret id="Password" type="password" value="#{user.password}" title="" /><br /><br />
 		<h:message for="uName"/><br/>
 		<h:message for="password"/>
 		<h:commandButton value="Submit" action="#{userController.login(user)}" />

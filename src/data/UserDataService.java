@@ -64,7 +64,7 @@ public class UserDataService implements UserDataInterface<User>
 			//This entire method seems like a huge security risk.
 			while (rs1.next()) 
 			{
-				User user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"));
+				User user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"), rs1.getInt("UID"));
 				users.add(user);
 			}
 
@@ -108,7 +108,7 @@ public class UserDataService implements UserDataInterface<User>
 			Statement stmt1 = conn.createStatement();
 			ResultSet rs1 = stmt1.executeQuery(sql1);
 			//user = new User
-			user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"));
+			user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"), rs1.getInt("UID"));
 			
 			// Cleanup
 			rs1.close();
@@ -147,7 +147,7 @@ public class UserDataService implements UserDataInterface<User>
 			ResultSet rs1 = stmt1.executeQuery(sql1);
 			while (rs1.next())
 			{
-			user2  = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"));
+			user2  = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"), rs1.getInt("UID"));
 			}
 			
 			rs1.close();
@@ -213,10 +213,32 @@ public class UserDataService implements UserDataInterface<User>
 		// TODO Auto-generated method stub
 		return false;
 	}
-	//to be implemented later
+
 	public boolean delete(User user) {
 		// TODO Auto-generated method stub
-		return false;
+		try {
+			conn = DriverManager.getConnection(url, username, password);
+			String sql1 = "DELETE FROM USER WHERE UID = " + user.getId();
+			Statement stmt1 = conn.createStatement();
+			stmt1.executeUpdate(sql1);
+			stmt1.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Cleanup Database
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return true;
 	}
-
 }
+
+

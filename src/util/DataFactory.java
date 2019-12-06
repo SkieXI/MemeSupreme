@@ -3,9 +3,7 @@ package util;
 import beans.BatchItems;
 import beans.BatchDTO;
 import data.BatchDataInterface;
-/**
- * @Author Jerran Fredricks/Joe Lean
- **/
+
 public class DataFactory {
 	//use getUser method to get object of type shape 
 	public BatchDTO getBatchInterface(String batchData)

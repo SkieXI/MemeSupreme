@@ -31,6 +31,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +80,8 @@ public class RESTService
 		try
 		{
 			//Create a new instance of Batchitems list.
-			List<BatchItems> bi = TI.getAllData();
+			//List<BatchItems> bi = TI.getAllData();
+			List<BatchItems> bi = BDI.findall();
 			//returns BatchItems.
 			return bi;
 		}
@@ -130,25 +132,24 @@ public class RESTService
 	@Path("/insert")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void setData(BatchItems items) {
+	public void setData(Search search) {
 
-		logger.info("Retreving data for: " + items + "| RESTService.setData()");
+		logger.info("Retreving data for: " + search.getSearch() + " | RESTService.setData()");
 		//Try to get information from Minimeme.
 		try {
-			//This is the most expiremental part of the whole project. 
-			//What we are doing is creating an HTML call to Minimeme and having it return us with a lot of default data.
-		Client client = ClientBuilder.newClient();
-		BatchDTO BTO = client.target("http://localhost:8080/MiniMeme/rest/tweets/outboundData").request()
-				.post(Entity.entity(new BatchDTO(), "application/json"), 
-					      BatchDTO.class);
-		
-		//Set values.
-		items.setLikesTotal(BTO.getItems().getLikesTotal());
-		items.setRetweetTotal(BTO.getItems().getRetweetTotal());
-		items.setTweetsTotal(BTO.getItems().getTweetsTotal());
-		
+			
+			Client client = ClientBuilder.newClient();
+			Response response = client.target("http://localhost:8080/MiniMeme/rest/tweets/inboundData/" 
+			+ search.getSearch() + "/" + search.getCount()
+			).request().get();
+		    BatchItems bi = response.readEntity(BatchItems.class);
+
+		    System.out.println(bi.getLikesTotal());
+		      response.close();
+		      client.close();
+			
 			// put data in database
-			TI.SaveNSave(items);
+			TI.SaveNSave(bi);
 			logger.info("Data Successfully put into Database. | RESTService.setData()");
 			
 			//If unable to gather information, then throw Exception e.
@@ -166,12 +167,12 @@ public class RESTService
 	@Path("/bridge")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void Bridge()
+	public void Bridge(BatchItems items)
 	{
 		logger.info("Entering method | RESTService.Bridge()");
 		//Create a new instances of Search and BatchItems.
 		Search se = new Search();
-		BatchItems items = new BatchItems();
+		///BatchItems items = new BatchItems();
 		
 		//Try to get data from Mimimeme.
 		try

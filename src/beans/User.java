@@ -1,4 +1,4 @@
-//Joe Leon
+//Joe Leon/Lewis Brown
 //CST-361
 //9-26-19
 //This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
@@ -33,6 +33,7 @@ public class User
 	@Size(min=3, max=255, message ="An email address needs to be between 3 and 255 characters long.")
 	private String email;
 	
+	private int id;
 	public User()
 	{
 		uName = "";
@@ -40,12 +41,13 @@ public class User
 		isMod = 0;
 		email = "";
 	}
-	public User(String uName, String password, String email, int isMod)
+	public User(String uName, String password, String email, int isMod, int id)
 	{
 		this.uName = uName;
 		this.password = password;
 		this.email = email;
 		this.isMod = isMod;
+		this.id = id;
 	}
 	
 	//Getters and Setters
@@ -81,4 +83,11 @@ public class User
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 }
