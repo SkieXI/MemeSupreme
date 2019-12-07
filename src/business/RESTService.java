@@ -134,6 +134,7 @@ public class RESTService
 	@Produces(MediaType.APPLICATION_JSON)
 	public void setData(Search search) {
 
+		System.out.println("TSTE");
 		logger.info("Retreving data for: " + search.getSearch() + " | RESTService.setData()");
 		//Try to get information from Minimeme.
 		try {
@@ -144,7 +145,7 @@ public class RESTService
 			).request().get();
 		    BatchItems bi = response.readEntity(BatchItems.class);
 
-		    System.out.println(bi.getLikesTotal());
+		    //System.out.println(bi.getLikesTotal());
 		      response.close();
 		      client.close();
 			

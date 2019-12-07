@@ -12,16 +12,23 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.interceptor.Interceptors;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import beans.BatchDTO;
 import beans.BatchItems;
+import beans.Search;
 import data.BatchDataInterface;
+import data.BatchDataService;
 import util.LoggingInterceptor;
+
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * This class is used for the business logic of processing all information from the Minimeme and the database.
@@ -39,12 +46,17 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	
 	@EJB
 	BatchDataInterface<BatchItems> BDI;
+	
+	@Inject
+	RESTService REST;
+	
 	/**This class is dummied out since this logic should have gone in a controller instead. 
 	 * It call the methods SaveNSave() and then getAllData().
 	 * 
 	 *@param tDatas
 	 *@return TDates
 	*/
+	@Override
 	public void PullnSave(BatchItems items)
 	{
 		logger.info("PullnSave called");
@@ -59,6 +71,7 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	 * @param tDatas
 	 * @return void
 	 */
+	@Override
 	public void SaveNSave(BatchItems data)
 	{
 		logger.info("SaveNSave called");
@@ -70,6 +83,7 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	 * @param 
 	 * @return datas
 	 */
+	@Override
 	public List<BatchItems> getAllData() 
 	{
 		//Logger telling us that we entered the method.
@@ -85,6 +99,7 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 	 * int t = the AA number in the databse.
 	 * 
 	 */
+	@Override
 	public BatchItems getData(int t) 
 	{
 		logger.info("getData called| TwitterManger.getData(" + t + ")");
@@ -96,5 +111,44 @@ public class TwitterManager implements TwitterInterface<BatchItems>
 		return bi;
 	}
 	
+	public void Bridge(Search search)
+	{
+		/*
+		logger.info(search.getSearch());
+		logger.info("Starting REST call. THis is NOT GOINDG TOD WORK!");
+		REST.setData(search);
+		logger.info("IT WORKED?!");
+		*/
+		//try {
+		logger.info("HOLY CRAP HERE WE GO!");
+		Client client = ClientBuilder.newClient();
+		Invocation.Builder bldr = client.target("http://localhost:8080/MiniMeme/rest/tweets/inboundData/" 
+				+ search.getSearch() + "/" + search.getCount()).request("application/json");
+      // BatchDTO BD = bldr.get(BatchDTO.class);
+        
+		BatchDataService BDI = new BatchDataService();
+		BDI.create(bldr.get(BatchDTO.class));
+		
+		//return bldr.get(BatchItems.class);
+		
+		//WebTarget target = client.target("http://localhost:8080/MiniMeme/rest/tweets/inboundData/" 
+		//+ search.getSearch() + "/" + search.getCount());
+		
+		//Response response = target.request().get();
+        
+        
+	    //BatchItems bi = response.readEntity(BatchItems.class);
+		
+		// put data in database
+	    logger.info("PUTTING STUFF INTO THE DATA BASE.");
+		//BDI.create(bi);
+		logger.info("STUFF PUT.");
+		logger.info("Data Successfully put into Database. | RESTService.setData()");
+		 client.close();
+		//If unable to gather information, then throw Exception e.
+		//} catch (Exception e) {
+		//logger.error("An error occured putting data into database. |RESTService.setData()");
+		//}
+	}
 
 }

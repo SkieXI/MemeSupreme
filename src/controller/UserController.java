@@ -12,7 +12,6 @@ import java.io.Serializable;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
@@ -45,11 +44,17 @@ public class UserController implements Serializable
 	@Inject
 	UserInterface<User> UI;
 	
-	@EJB
+	@Inject
 	TwitterInterface<BatchItems> TI;
 	
 	@EJB
+	TwitterInterface<Search> SI;
+	
+	@EJB
 	BatchDataInterface<BatchItems> BTI;
+	
+	@EJB
+	TwitterManager TM;
 	
 	Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -160,8 +165,10 @@ public class UserController implements Serializable
 	public String Search(Search search)
 	{
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
-		logger.info("Search found: returning MainMenu.xhtml");
-
-		return "MainMenu.xhtml";
+		logger.info("Searching for " + search.getSearch() + ". : returning MainMenu.xhtml");
+		
+		TM.Bridge(search);
+		logger.info("We did the thing.");
+		return "AdminMain.xhtml";
 	}
 }

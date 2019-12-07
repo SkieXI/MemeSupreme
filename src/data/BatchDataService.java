@@ -22,6 +22,7 @@ import javax.interceptor.Interceptors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import beans.BatchDTO;
 import beans.BatchItems;
 import controller.UserController;
 import util.DatabaseException;
@@ -95,7 +96,7 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 	 * @param BatchItems
 	 * @return boolean
 	 */
-	public boolean create(BatchItems bi) {
+	public boolean create(BatchDTO bto) {
 		Connection conn = null;
 		try
 		{
@@ -103,7 +104,9 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 		logger.info("Adding new batch to the databse | BatchDTO.create()");
 		
 		conn = DriverManager.getConnection(url, username, password);
-		String sql1 = String.format("INSERT INTO BATCHRECORDS(RETWEETS, LIKES, TWEETCONT) VALUES(?, ?, ?)");
+		String sql1 = String.format("INSERT INTO BATCHRECORDS(RETWEETS, LIKES, TWEETCOUNT) VALUES(?, ?, ?)");
+		
+		BatchItems bi = bto.getItems();
 		
 		//Each collum that is going to be inserted into the database needs to be processed.
 		PreparedStatement stmt1 = conn.prepareStatement(sql1);
