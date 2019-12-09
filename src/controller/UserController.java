@@ -1,11 +1,9 @@
-//Joe Leon/lewis brwon
-//CST-361
-//9-26-19
-//This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
-//We used source code from the following websites to complete this assignment:
-//WEBSITE 1
-//WEBSITE 2
-
+/**Joe Leon/lewis brwon
+**CST-361
+**9-26-19
+**This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+**We used source code from the following websites to complete this assignment:
+*/
 package controller;
 
 import java.io.Serializable;
@@ -24,8 +22,10 @@ import org.slf4j.LoggerFactory;
 import beans.User;
 import beans.BatchItems;
 import beans.Search;
+import beans.TwitterItems;
 import business.TwitterInterface;
-import business.TwitterManager;
+import business.BatchInterface;
+import business.BatchManager;
 import business.UserInterface;
 import data.BatchDataInterface;
 import util.DatabaseException;
@@ -41,20 +41,14 @@ public class UserController implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	//Calling in different beans and parts of the application.
-	@Inject
+	@EJB
 	UserInterface<User> UI;
 	
-	@Inject
-	TwitterInterface<BatchItems> TI;
+	@EJB
+	TwitterInterface<TwitterItems> TI;
 	
 	@EJB
-	TwitterInterface<Search> SI;
-	
-	@EJB
-	BatchDataInterface<BatchItems> BTI;
-	
-	@EJB
-	TwitterManager TM;
+	BatchInterface<BatchItems> BI;
 	
 	Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -129,18 +123,7 @@ public class UserController implements Serializable
 				logger.info("Login failed: Admin level = 0: Returning _LoginFailed.xhtml");
 				return "_LoginFailed.xhtml";
 			}
-				/*
-				if (user.getIsMod() == 0)
-				{
-				logger.info("Noraml login successful: Returning MainMenu.xhtml");
-				return "MainMenu.xhtml";
-				}
-				if (user.getIsMod() == 1)
-				{
-					logger.info("Admin login successful: Returning AdminMain");
-					return "AdminMain.xhtml";
-				}
-				*/
+			else
 			{
 				//If there isn't any users found, then it returns with a _LoginFailed.xhtml page.
 				logger.info("Login failed hard: Returning _LoginFailed.xhtml");
@@ -164,11 +147,42 @@ public class UserController implements Serializable
 	 */
 	public String Search(Search search)
 	{
+		logger.info("Searching for " + search.getSearch() + ". | UserController.search(" + search.getSearch() + ")");
 		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
 		logger.info("Searching for " + search.getSearch() + ". : returning MainMenu.xhtml");
 		
-		TM.Bridge(search);
-		logger.info("We did the thing.");
+		TI.Bridge(search);
+		BI.Bridge(search);
+		logger.info("Search successful | UserController.Search(" + search.getSearch() + ")");
+		return "MainMenu.xhtml";
+	}
+	
+	/**This method was created to make a more effecent means of testing out the Twitter API.
+	 * It may go unused in the final version. But it is fun to just play around with the search feature and see what comes up.
+	 * 
+	 * @param search
+	 * @return
+	 */
+	public String AdminSearch(Search search)
+	{
+		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
+		logger.info("Searching for " + search.getSearch() + ". : returning MainMenu.xhtml");
+		
+		TI.Bridge(search);
+		BI.Bridge(search);
+		logger.info("Search successful | UserController.Search(" + search.getSearch() + ")");
 		return "AdminMain.xhtml";
+	}
+	/**A button for the Commmand link in MainMenu to work.
+	 * 
+	 * @param search
+	 * @return Index.xhtml
+	 */
+	public String logout(Search search)
+	{
+		logger.info("Logging out... | UserController.logout()");
+		FacesContext.getCurrentInstance().getExternalContext().getRequestMap().put("search", search);
+		logger.info("Logged out. | UserController.logout()");
+		return "Index.xhtml";
 	}
 }

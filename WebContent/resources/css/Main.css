@@ -1,0 +1,11 @@
+.hero-image {
+  
+  background-color: #DA2727;
+  height: 2000px;
+ 
+  position: relative;
+}
+
+.hero-text {
+  color: white;
+}

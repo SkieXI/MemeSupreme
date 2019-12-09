@@ -4,10 +4,17 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"> 
       
-<h:head><title>Meme Supreme Login</title></h:head>
-<body>
-	<h2>Login</h2>
+<h:head><title>Meme Supreme Login</title>
+
+</h:head>
+
+<h:body>
+<ui:composition template="/layouts/commonLayout.xhtml">
+	<ui:define name="title">MemeSupreme Login</ui:define>
+	<ui:define name="content">
+	
 	<div align="center">
+	<h3 class="wtext">Login</h3>
 		<h:form>
 		
 		
@@ -16,12 +23,23 @@
 		
 		<h:message for="uName"/><br/>
 		<h:message for="password"/>
-		<h:commandButton value="Submit" action="#{userController.login(user)}" />
+
+		<h:commandLink action="#{userController.login(user)}" >
+				<img src="./resources/img/Submit.png" height="25" style="border: 1px solid black"/>
+			</h:commandLink>
 		
 		<h:form>
-			<h:button value="Back" outcome="Index.xhtml" />
+		<div class="back">
+		<img src="resources/img/Back.png" alt="sup"/>
+			<h:button class="backbtn" outcome="Index.xhtml" />
+		</div>
 		</h:form>
 	</h:form>
+
 	</div>
-	</body>
+	
+	</ui:define>
+	</ui:composition>
+	</h:body>
+
 </html>

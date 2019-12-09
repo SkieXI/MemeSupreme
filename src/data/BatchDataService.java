@@ -39,14 +39,21 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 		String username = "root";
 		String password = "root";
 		
+		//Set up the logger.
 		Logger logger = LoggerFactory.getLogger(BatchDataService.class);
 		
 		/**This pulls everything from the database.
 		 * @return List<BatchItems>
 		 */
-	public List<BatchItems> findall() {
+		@Override
+		public List<BatchItems> findall() {
+		
+			//Make sure that the connection starts out null.
 		Connection conn = null;
+		//Create a new list of BatchItems.
 		List<BatchItems> bi = new ArrayList<BatchItems>();
+		
+		//Attempt to pull from the database.
 		try
 		{
 			logger.info("Pulling info from the database | BatchDTO.findall()");
@@ -61,11 +68,12 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 			while (rs1.next()) 
 			{
 				BatchItems bit = new BatchItems(rs1.getInt("RETWEETS"), rs1.getInt("LIKES"), rs1.getInt("TWEETCOUNT")); 
-						bi.add(bit);
-
-				System.out.println("Retweet Total:" + bit.getRetweetTotal());
-				return bi;
+				bi.add(bit);
+				//return bi;
 			}
+			//Close the connections.
+			rs1.close();
+			stmt1.close();
 		}
 		catch (SQLException e)
 		{
@@ -96,27 +104,37 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 	 * @param BatchItems
 	 * @return boolean
 	 */
+		@Override
 	public boolean create(BatchDTO bto) {
+			
+			//Make sure that the connection is empty before starting.
 		Connection conn = null;
-		try
-		{
+		try {
 		
 		logger.info("Adding new batch to the databse | BatchDTO.create()");
 		
 		conn = DriverManager.getConnection(url, username, password);
+		//SQL prepared statement. retweettotal | likesToatal | Tweetstotal 
 		String sql1 = String.format("INSERT INTO BATCHRECORDS(RETWEETS, LIKES, TWEETCOUNT) VALUES(?, ?, ?)");
 		
 		BatchItems bi = bto.getItems();
 		
 		//Each collum that is going to be inserted into the database needs to be processed.
 		PreparedStatement stmt1 = conn.prepareStatement(sql1);
+		
+		// First = RetweetTotal.
 		stmt1.setInt(1, bi.getRetweetTotal());
+		
+		//Second = LikesTotatl. 
 		stmt1.setInt(2, bi.getLikesTotal());
+		
+		//Third = TweetsTotal.
 		stmt1.setInt(3, bi.getTweetsTotal());
+		
+		//Exectue SQL statement.
 		stmt1.executeUpdate();
 
-		System.out.println("Create Finish");
-		System.out.println("===");
+		//Close conections.
 		stmt1.close();
 		logger.info("Information uploaded successfully!| BatchDTO.create()");
 		}
@@ -151,7 +169,9 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 	 */
 	public BatchItems findby(int id) 
 	{
+		//Make sure the connection is empty.
 		Connection conn = null;
+		//Create new instance of BatchItems.
 		BatchItems items = new BatchItems();
 		try {
 			// Connect to the Database
@@ -161,11 +181,13 @@ public class BatchDataService implements BatchDataInterface <BatchItems>
 			String sql1 = String.format("SELECT * FROM BATCHRECORDS WHERE BATCHNO =%d", id);
 			Statement stmt1 = conn.createStatement();
 			ResultSet rs1 = stmt1.executeQuery(sql1);
+			
+			//For each row found in the Database, set it to the BatchItem list. 
 			while(rs1.next()) {
 			items = new BatchItems(rs1.getInt("RETWEETS"), rs1.getInt("LIKES"), rs1.getInt("TWEETCOUNT"));
 			}
 			
-			// Cleanup
+			// Close connections.
 			rs1.close();
 			stmt1.close();
 		} catch (SQLException e) {

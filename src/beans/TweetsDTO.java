@@ -1,9 +1,8 @@
-/**
-CST-361
-9-29-2019
-This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
-This class is used for REST services.
-**/
+/**CST-361
+ * 12-6-19
+ * This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+ * This class is the DTO of all TwitterItems. I think its used somewhere.
+ */
 package beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -12,22 +11,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Response")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BatchDTO implements BatchDTOInterface<BatchItems>
+public class TweetsDTO implements BatchDTOInterface<TwitterItems>
 {
-	//Variables with a int for a status, and a String for a message.
 	private int status;
 	private String message;
-	private BatchItems items;
+	private TwitterItems items;
 	
-	//Non-default constructor.
-	public BatchDTO(int status, String message, BatchItems items)
+	public TweetsDTO(int status, String message, TwitterItems items)
 	{
 		super();
 		this.status = status;
 		this.message = message;
 		this.items = items;
 	}
-	public BatchDTO()
+	public TweetsDTO()
 	{
 		super();
 		message = "";
@@ -35,7 +32,6 @@ public class BatchDTO implements BatchDTOInterface<BatchItems>
 		items = null;
 	}
 	
-	//Getters and Setters.
 	public int getStatus() {
 		return status;
 	}
@@ -49,11 +45,12 @@ public class BatchDTO implements BatchDTOInterface<BatchItems>
 		this.message = message;
 	}
 	@Override
-	public BatchItems getItems() {
+	public TwitterItems getItems() {
 		return items;
 	}
 	@Override
-	public void setItems(BatchItems items) {
+	public void setItems(TwitterItems items) {
 		this.items = items;
 	}
+
 }

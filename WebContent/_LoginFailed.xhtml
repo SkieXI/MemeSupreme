@@ -5,23 +5,36 @@
       xmlns:h="http://java.sun.com/jsf/html"> 
 
 <h:head><title>Meme Supreme Login</title></h:head>
-<body>
+<h:body>
+<ui:composition template="/layouts/commonLayout.xhtml">
+	<ui:define name="title">MemeSupreme Login</ui:define>
+	<ui:define name="content">
 	<h2>Login</h2>
-	<h3>Username or password don't match</h3>
+	
 	<div align="center">
+	<h3 class="wtext">Login</h3>
 		<h:form>
-		
+		<h2>Login Failed.</h2>
 		
 		Email:<h:inputText id="uName" value="#{user.uName}" title="" /><br />
 		Password:<h:inputSecret id="Password" type="password" value="#{user.password}" title="" /><br /><br />
+		
 		<h:message for="uName"/><br/>
 		<h:message for="password"/>
-		<h:commandButton value="Submit" action="#{userController.login(user)}" />
+
+		<h:commandLink action="#{userController.login(user)}" >
+				<img src="./resources/img/Submit.png" height="25" style="border: 1px solid black"/>
+			</h:commandLink>
 		
 		<h:form>
-			<h:button value="Back" outcome="Index.xhtml" />
+		<div class="back">
+		<img src="resources/img/Back.png" alt="sup"/>
+			<h:button class="backbtn" outcome="Index.xhtml" />
+		</div>
 		</h:form>
 	</h:form>
 	</div>
-	</body>
+	</ui:define>
+	</ui:composition>
+</h:body>
 </html>

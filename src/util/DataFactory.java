@@ -1,3 +1,10 @@
+/**Joe Leon
+**CST-361
+**10-20-19
+**This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+**
+*/
+
 package util;
 
 import beans.BatchItems;
@@ -5,7 +12,12 @@ import beans.BatchDTO;
 import data.BatchDataInterface;
 
 public class DataFactory {
-	//use getUser method to get object of type shape 
+	
+	/**Factory pattern.
+	 * 
+	 * @param batchData
+	 * @return BatchDTO.
+	 */
 	public BatchDTO getBatchInterface(String batchData)
 	{
 		if(batchData ==null)

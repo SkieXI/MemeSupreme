@@ -23,17 +23,17 @@
 		src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
 	<script type="text/javascript">
 	//All of this was from Mark Moot as we were panicking at the last minute and we were hitting our heads for at least 3 hours.
-	function getMemes() {
+	function gettotal() {
 		$.ajax(
 				{
 				   type: "GET",
-				   url: "/MemeSupreme/rest/tweets/getalldata",
+				   url: "/MemeSupreme/rest/tweets/getAllBatch",
 				   dataType: "json",
 				   success: function(data)
 				{
 
 				//Display
-				$('#twitterItems2').dataTable({
+				$('#twitterItems1').dataTable({
 					"responsive" : true,
 					"data" : data,
 					"columns" : [ {
@@ -56,45 +56,102 @@
 			},
 		})
 	}
+	function getTweets() {
+		$.ajax(
+				{
+				   type: "GET",
+				   url: "/MemeSupreme/rest/tweets/getAllData",
+				   dataType: "json",
+				   success: function(data)
+				{
+		
+				//Display
+				//TWEET 
+				//SCREENNAME 
+				//RT_COUNT 
+				//LIKES LANG
+					$('#twitterItems2').dataTable({
+						"responsive" : true,
+						"data" : data,
+						"columns" : [ {
+							"data" : "screenName",
+							"reposonsivePriority" : 1
+						}, {
+							"data" : "tweet",
+							"responsivePriority" : 2
+						}, {
+							"data" : "retweetCount",
+							"responsivePriority" : 3
+						}, {
+							"data" : "likes",
+							"responsivePriority" : 4
+						}, {
+							"data" : "language",
+							"reposonsivePriority" : 5
+						} ]
+					
+					});
+				},
 
-	$(document).ready(getMemes);
+			error : function(xhr, ajaxOptions, throwError) {
+				alert(xhr.status);
+				alert(throwError);
+			},
+		})
+	}
+	$(document).ready(getTweets);
+	$(document).ready(gettotal);
 </script>
 <h:outputStylesheet library="css" name="Main.css" />
 </h:head>
-<body> 
+<body style="background-color: #DA2727"> 
 	<div align="left">
-	<h1>Meme Supreme</h1>
-	<h3>Main Menu.</h3>
+	
 	</div>
 	<div align="center">
+
+	<img src="./resources/img/MemeSupremeLogo.png" height="200"/>
 	
+	<h3>Main Menu.</h3>
 		<h:form>
-			<h:button value="Logout" outcome="Index.xhtml" />
+			Search: <h:inputText id = "search" value= "#{search.search}" title ="" />
+			<br/>
+			<h:commandLink action="#{userController.Search(search)}" >
+				<img src="./resources/img/Submit.png" height="25" style="border: 1px solid black" />
+			</h:commandLink>
+			<h:commandLink action="#{userController.logout(search)}" >
+				<img src="./resources/img/Logout.png" height="25" style="border: 1px solid black" />
+			</h:commandLink>
 		</h:form>
 		</div>
 		
 		<div class="hero-image">
 		<div class="hero-text">
 		
-			<table id="twitterItems2" width="75%">
+			<table id="twitterItems1" width="75%">
 				<thead>
 					<tr>
 						<th><label>Tweets Count</label></th>
 						<th><label>Likes</label></th>
 						<th><label>Retweets</label></th>
+						
 					</tr>
 				</thead>
 			</table>
-			<!-- Loads the Javascript file that creates a line chart for temperatureC. -->
-			<label>Retweet Chart</label>
-			<div id="chartRetweets_div"></div>
-			<!-- Loads the Javascript file that creates a line chart for temperatureF. -->
+			<table id="twitterItems2" width="75%">
+				<thead>
+					<tr>
+						<th><label>Name</label></th>
+						<th><label>Message</label></th>
+						<th><label>Retweets</label></th>
+						<th><label>Likes</label></th>
+						<th><label>Language</label></th>
+					</tr>
+				</thead>
+			</table>
 			<label>Likes Chart</label>
-			<div id="chartLikes_div"></div>
-			<!-- Loads the javaScript file that creates a line chart for pressure. -->
-			<label>Pressure Chart</label>
-			<div id="chartLang_div"></div>
-			<div />
+			<div id="drawStuff"></div>
+			<div/>
 	</div>
 	</div>
 </body> 

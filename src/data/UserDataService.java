@@ -1,10 +1,9 @@
-//Joe Leon
-//CST-361
-//9-26-19
-//This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
-//We used source code from the following websites to complete this assignment:
-//WEBSITE 1
-//WEBSITE 2
+/**Joe Leon
+**CST-361
+**9-26-19
+**This assignment was completed in collaboration with Joe Leon, and Lewis Brown.
+**
+*/
 
 package data;
 
@@ -43,8 +42,9 @@ public class UserDataService implements UserDataInterface<User>
 	
 	//New instance of the logger for this class.
 	Logger logger = LoggerFactory.getLogger(UserDataService.class);
-	/**This provides a huge list of everything within the database.
-	 * @param 
+	
+	
+	/**This provides a huge list of everything within the database inside the USER table.
 	 * @return users
 	 */
 	public List<User> findAll() 
@@ -96,7 +96,9 @@ public class UserDataService implements UserDataInterface<User>
 	 * @return users
 	 */
 	public User findById(int id) {
-				User user = new User();
+	
+		//New instance of User.
+		User user = new User();
 		try {
 			// Connect to the Database
 			conn = DriverManager.getConnection(url, username, password);
@@ -107,13 +109,12 @@ public class UserDataService implements UserDataInterface<User>
 			String sql1 = String.format("SELECT * FROM USER WHERE USER_ID='%S'",id);
 			Statement stmt1 = conn.createStatement();
 			ResultSet rs1 = stmt1.executeQuery(sql1);
-			//user = new User
 			user = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"), rs1.getInt("UID"));
 			
 			// Cleanup
 			rs1.close();
 			stmt1.close();
-			logger.info("Search found!| UserDTO.findById()");
+			logger.info("Search found!| UserDTO.findById(" + id + ")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -149,7 +150,7 @@ public class UserDataService implements UserDataInterface<User>
 			{
 			user2  = new User(rs1.getString("UNAME"), rs1.getString("EMAIL"), rs1.getString("PASSWORD"), rs1.getInt("ISMOD"), rs1.getInt("UID"));
 			}
-			
+			//Close all connections.
 			rs1.close();
 			stmt1.close();
 			logger.info("Search successful!| UserDTO.findby()");
@@ -175,7 +176,7 @@ public class UserDataService implements UserDataInterface<User>
 	 */
 	public boolean create(User user) 
 	{
-		// Insert User
+		// Insert new user into the database.
 		logger.info("Adding " + user.getuName() + " to the database.| UserDTO.create()");
 		
 				try {
@@ -184,11 +185,12 @@ public class UserDataService implements UserDataInterface<User>
 
 					// Insert an User
 					String sql1 = String.format("INSERT INTO USER(UNAME, PASSWORD, EMAIL, ISMOD) VALUES('%s', '%s', '%s', 0)",
-					//		user.getUserName(),user.getEmail(),user.getPassword(),user.getFirstName(),user.getLastName(),user.getPermissions());
 					user.getuName(),user.getPassword(),user.getEmail(),user.getIsMod());
 							
-							Statement stmt1 = conn.createStatement();
+					Statement stmt1 = conn.createStatement();
 					stmt1.executeUpdate(sql1);
+					
+					//Close the connection. 
 					stmt1.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -214,13 +216,24 @@ public class UserDataService implements UserDataInterface<User>
 		return false;
 	}
 
+	/**This is used to remove a user from the database.
+	 * @param User user.
+	 * @return boolean.
+	 */
 	public boolean delete(User user) {
-		// TODO Auto-generated method stub
+		
+		//Make sure that conn is empty.
+		conn = null;
+		
 		try {
 			conn = DriverManager.getConnection(url, username, password);
 			String sql1 = "DELETE FROM USER WHERE UID = " + user.getId();
 			Statement stmt1 = conn.createStatement();
+			
+			//Run SQL command.
 			stmt1.executeUpdate(sql1);
+			
+			//Close conenction. 
 			stmt1.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

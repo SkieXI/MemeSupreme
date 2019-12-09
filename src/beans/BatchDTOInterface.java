@@ -6,11 +6,17 @@ Interface for Facotry Pattern.
 **/
 package beans;
 
-public interface BatchDTOInterface 
+/**
+ * 
+ * @author jleon
+ *
+ * @param <T>
+ */
+public interface BatchDTOInterface <T>
 {
-	public BatchItems getItems();
+	public T getItems();
 
-	public void setItems(BatchItems items);
+	public void setItems(T t);
 	
 	public int getStatus();
 

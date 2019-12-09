@@ -4,19 +4,22 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"> 
 
-<h:head></h:head> 
-<body> 
+<h:body> 
+<ui:composition template="/layouts/commonLayout.xhtml">
+	<ui:define name="title">MemeSupreme index</ui:define>
+	<ui:define name="content">
 	<div align="center">
-	<h1 style="font-size:50px">Meme Supreme</h1>
-    <h3>Made by Lewis Brown and Joe Leon</h3>
-		<h:button value="Login" outcome="Login.xhtml" />
-		<h:button value="Register" outcome="Register.xhtml" />
-	</div>
-	<div align="left">
-	
-	<a href="http://localhost:8080/MiniMeme/JumpStart.xhtml">To MiniMeme</a>
-	</div>
-	
-	
-</body> 
+    <h3 class="wtext">Made by Lewis Brown and Joe Leon</h3>
+		<div class="login">
+			<img src="resources/img/Login.png" alt="sup"/>
+			<h:button class="logbtn" outcome="Login.xhtml"></h:button>
+		</div>
+		<div class="reg">
+			<img src="resources/img/Register.png" alt="sup"/>
+			<h:button class="regbtn" outcome="Register.xhtml"></h:button>
+		</div>
+		</div>
+	</ui:define>
+	</ui:composition>
+</h:body> 
 </html>

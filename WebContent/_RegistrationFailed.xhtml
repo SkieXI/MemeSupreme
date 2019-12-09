@@ -5,9 +5,12 @@
       xmlns:h="http://java.sun.com/jsf/html"> 
 
 <h:head></h:head> 
-<body>
+<h:body>
+<ui:composition template="/layouts/commonLayout.xhtml">
+	<ui:define name="title">MemeSupreme Register</ui:define>
+	<ui:define name="content">
 	<div align="center">
-	<h2>Register</h2>
+	<h3 class="wtext">Register</h3>
 	<h3>Username already taken.</h3>
 	<h:form>
 		Username: <h:inputText id="uName" value="#{user.uName}" title="" /> <br/>
@@ -18,13 +21,19 @@
 		<h:message for="email"/><br/>
 		<h:message for="password"/><br/>
 			
-			<h:commandButton value="Submit" action="#{userController.Register(user)}" />
+			<h:commandLink action="#{userController.Register(user)}" >
+				<img src="./resources/img/Submit.png" height="25" style="border: 1px solid black"/>
+			</h:commandLink>
 	<h:form>
-			<h:button value="Back" outcome="Index.xhtml" />
+			<div class="back">
+		<img src="resources/img/Back.png" alt="sup"/>
+			<h:button class="backbtn" outcome="Index.xhtml" />
+		</div>
 	</h:form>
 	</h:form>
 	</div>
-
-</body>
+</ui:define>
+	</ui:composition>
+</h:body>
       
 </html>

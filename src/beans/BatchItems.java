@@ -6,9 +6,6 @@ This is the class for the items that are going to be recorded in Minimemed and s
 **/
 package beans;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 public class BatchItems 
 {
 

@@ -1,0 +1,106 @@
+.login
+{
+	position: relative;
+  	width: 50%;
+	
+}
+
+.login img
+{
+	width: 25%;
+	height: 100px;
+	border: 5px solid black;
+}
+
+.login .logbtn
+{
+	position: absolute;
+ 	top: 50%;
+  	left: 50%;
+  	transform: translate(-50%, -50%);
+  	ms-transform: translate(-50%, -50%);
+  	background-color: Transparent;
+  	color: Transparent;
+  	font-size: 40px;
+  	padding: 28px 28px;
+  	width: 25%;
+  	border: none;
+  	cursor: pointer;
+  	border-radius: 5px;
+  	outline: none;
+}
+
+.login .logbtn:hover {
+  background-color: Transparent;
+}
+
+.reg
+{
+	position: relative;
+	width: 50%;
+}
+.reg img
+{
+	width: 25%;
+	height: 100px;
+	border: 5px solid black;
+}
+.reg .regbtn
+{
+	position: absolute;
+ 	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  	ms-transform: translate(-50%, -50%);
+	width:255px;
+	height:100px;
+	cursor:pointer;
+	background-color: Transparent;
+  	color: Transparent;
+  	font-size: 40px;
+  	padding: 28px 28px;
+  	border: none;
+  	cursor: pointer;
+  	border-radius: 5px;
+  	outline: none;
+}
+.reg .regbtn:hover {
+  background-color: Transparent;
+}
+.wtext
+{
+	color: white;
+}
+
+.back
+{
+	position: relative;
+	width: 50%;
+}
+.back img
+{
+	
+	height: 25px;
+	border: 1px solid black;
+}
+.back .backbtn
+{
+	position: absolute;
+ 	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  	ms-transform: translate(-50%, -50%);
+	height: 1px;
+	cursor:pointer;
+	background-color: Transparent;
+  	color: Transparent;
+  	font-size: 15px;
+  	padding: 12px 20px;
+  	border: Transparent;
+  	cursor: pointer;
+  	border-radius: 5px;
+  	outline: none;
+}
+.reg .regbtn:hover {
+  background-color: Transparent;
+}
